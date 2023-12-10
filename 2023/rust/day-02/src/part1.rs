@@ -2,31 +2,53 @@ use std::collections::HashMap;
 
 use crate::custom_error::AocError;
 
+struct Game {
+    game_num: u32,
+    colors: HashMap<String, u32>,
+}
+
+impl Game {
+    fn new(game_num: u32) -> Self {
+        Self {
+            game_num,
+            colors: HashMap::new(),
+        }
+    }
+
+    fn add_round(&mut self, round: &str) {
+        for count_of_color in round.split(",") {
+            let count = count_of_color.trim().split_once(" ").unwrap().0;
+            let color = count_of_color.trim().split_once(" ").unwrap().1;
+            dbg!(count, color);
+        }
+    }
+}
+
 #[tracing::instrument]
 pub fn process(
     input: &str,
 ) -> miette::Result<String, AocError> {
    //this function should split the input into lines, then split on :, and return the parts. 
-   let lines = input.lines();
-//    let mut games = HashMap::new();
-    for line in lines {
-        let (game_num, value) = line.split_once(":").unwrap();
-        let game_num = game_num.trim().split_once(" ").unwrap().1;
-        let value = value.trim();
-        for round in value.split(";") {
-            for count_of_color in round.split(",") {
-                let count = count_of_color.trim().split_once(" ").unwrap().0;
-                let color = count_of_color.trim().split_once(" ").unwrap().1;
-                dbg!(count, color);
-            }
-        } 
+        let lines = input.lines();
+        let mut games = HashMap::new();
+        for line in lines {
+            let (game_num, value) = line.split_once(":").unwrap();
+            let game_num = game_num.trim().split_once(" ").unwrap().1;
+            let value = value.trim();
+            for round in value.split(";") {
+                for count_of_color in round.split(",") {
+                    let count = count_of_color.trim().split_once(" ").unwrap().0;
+                    let color = count_of_color.trim().split_once(" ").unwrap().1;
+                    dbg!(count, color);
+                }
+            } 
+            
+            dbg!(game_num, value);
+        }
         
-        dbg!(game_num, value);
-    }
-    
-Ok("make it pass".to_string())
+    Ok("make it pass".to_string())
 
-}
+    }
 
 #[cfg(test)]
 mod tests {
