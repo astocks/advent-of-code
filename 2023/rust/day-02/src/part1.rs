@@ -1,28 +1,27 @@
-use std::collections::HashMap;
 
 use crate::custom_error::AocError;
 
+
+#[derive(Debug)]
+enum Color {
+    Red,
+    Blue,
+    Green,
+}
+#[derive(Debug)]
+struct Cube(Color, u32);
+
+#[derive(Debug)]
+struct Round {
+    cubes: Vec<Cube>,
+}
+
+#[derive(Debug)]
 struct Game {
-    game_num: u32,
-    colors: HashMap<String, u32>,
+    game_number: u32,
+    rounds: Vec<Round>,
 }
 
-impl Game {
-    fn new(game_num: u32) -> Self {
-        Self {
-            game_num,
-            colors: HashMap::new(),
-        }
-    }
-
-    fn add_round(&mut self, round: &str) {
-        for count_of_color in round.split(",") {
-            let count = count_of_color.trim().split_once(" ").unwrap().0;
-            let color = count_of_color.trim().split_once(" ").unwrap().1;
-            dbg!(count, color);
-        }
-    }
-}
 
 #[tracing::instrument]
 pub fn process(
@@ -30,20 +29,33 @@ pub fn process(
 ) -> miette::Result<String, AocError> {
    //this function should split the input into lines, then split on :, and return the parts. 
         let lines = input.lines();
-        let mut games = HashMap::new();
         for line in lines {
             let (game_num, value) = line.split_once(":").unwrap();
             let game_num = game_num.trim().split_once(" ").unwrap().1;
             let value = value.trim();
+            let mut game = Game {
+                game_number: game_num.parse::<u32>().unwrap(),
+                rounds: Vec::new(),
+            };
             for round in value.split(";") {
+                let mut r = Round {
+                    cubes: Vec::new(),
+                };
                 for count_of_color in round.split(",") {
-                    let count = count_of_color.trim().split_once(" ").unwrap().0;
+                    let count = count_of_color.trim().split_once(" ").unwrap().0.parse::<u32>().unwrap();
                     let color = count_of_color.trim().split_once(" ").unwrap().1;
-                    dbg!(count, color);
+                    let cube = match color.to_lowercase().as_str() {
+                        "red" => Cube(Color::Red, count),
+                        "blue" => Cube(Color::Blue, count),
+                        "green" => Cube(Color::Green, count),
+                        _ => panic!("unable to match {color}"),
+                    };
+                    r.cubes.push(cube);
                 }
+                game.rounds.push(r);
             } 
             
-            dbg!(game_num, value);
+            dbg!(game);
         }
         
     Ok("make it pass".to_string())
