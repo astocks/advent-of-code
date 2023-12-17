@@ -21,18 +21,6 @@ fn criterion_benchmark_part2(c: &mut Criterion) {
     group.bench_with_input("part2", input, |b, input| {
         b.iter(|| part2::process(input))
     });
-    group.bench_with_input(
-        "part2_nom",
-        input,
-        |b, input| b.iter(|| part2_nom::process(input)),
-    );
-    group.bench_with_input(
-        "part2_aho_corasick",
-        input,
-        |b, input| {
-            b.iter(|| part2_aho_corasick::process(input))
-        },
-    );
     group.finish();
 }
 
