@@ -1,10 +1,12 @@
 use crate::custom_error::AocError;
+use crate::part1::{Bag, Game, Round, parse_games};
+
 
 #[tracing::instrument]
 pub fn process(
     _input: &str,
 ) -> miette::Result<String, AocError> {
-    todo!("day 01 - part 2");
+    todo!("day 02 - part 2");
 }
 
 #[cfg(test)]

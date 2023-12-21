@@ -1,14 +1,13 @@
 use crate::custom_error::AocError;
-
 #[derive(Debug)]
-struct Round {
+pub struct Round {
     red: u8,
     green: u8,
     blue: u8,
 }
 
 #[derive(Debug)]
-struct Game {
+pub struct Game {
     game_number: u32,
     rounds: Vec<Round>,
 }
@@ -35,7 +34,7 @@ impl Game {
 }
 
 #[derive(Debug)]
-struct Bag {
+pub struct Bag {
     red: u8,
     green: u8,
     blue: u8,
@@ -56,7 +55,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     Ok(sum_games.to_string())
 }
 
-fn parse_games(input: &str) -> Vec<Game> {
+pub fn parse_games(input: &str) -> Vec<Game> {
     let lines = input.lines();
     let mut games: Vec<Game> = Vec::new();
     for line in lines {
