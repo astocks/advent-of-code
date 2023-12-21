@@ -1,12 +1,5 @@
 use crate::custom_error::AocError;
 
-enum Color {
-    Red(usize),
-    Green(usize),
-    Blue(usize),
-}
-
-
 #[tracing::instrument]
 pub fn process(
     _input: &str,
