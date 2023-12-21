@@ -14,18 +14,46 @@ struct Game {
 }
 
 impl Game {
-    fn is_valid_game(&self, sample_game: &Game) -> bool {
-        let mut valid = true;
-        todo!("implement is_valid_game");
+    fn is_valid_game(&self, sample_game: &Bag) -> bool {
+        let mut valid_game = false;
+        let mut valid_round: Vec<bool> = Vec::new();
+        for round in &self.rounds {
+            if sample_game.red >= round.red
+                && sample_game.green >= round.green
+                && sample_game.blue >= round.blue
+            {valid_round.push(true);
+            } else 
+            { 
+                valid_round.push(false);
+            }
+        } 
+        if valid_round.iter().all(|&x| x == true) {
+            valid_game = true;
+        }
+        valid_game
     }
+}
+
+#[derive(Debug)]
+struct Bag {
+    red: u8,
+    green: u8,
+    blue: u8,
 }
 
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
-    parse_games(input); // take file with game data and parse it into a
-                        // vector of games
-
-    Ok("this still isn't finished".to_string())
+    let games = parse_games(input); // take file with game data and parse it into a vector
+    let test_bag = Bag {
+        red: 12,
+        green: 13,
+        blue: 14,
+    };
+    // get the valid games that could be played with the test
+    // bag
+    let valid_games: Vec<u32> = get_valid_games(&games, test_bag);
+    let sum_games: u32 = valid_games.iter().sum();
+    Ok(sum_games.to_string())
 }
 
 fn parse_games(input: &str) -> Vec<Game> {
@@ -40,7 +68,11 @@ fn parse_games(input: &str) -> Vec<Game> {
             rounds: Vec::new(),
         };
         for round in value.split(";") {
-            let mut r = Round { red: 0, green: 0, blue: 0};
+            let mut r = Round {
+                red: 0,
+                green: 0,
+                blue: 0,
+            };
             for count_of_color in round.split(",") {
                 let count: u8 = count_of_color
                     .trim()
@@ -53,7 +85,7 @@ fn parse_games(input: &str) -> Vec<Game> {
                 match color.to_lowercase().as_str() {
                     "red" => r.red = count,
                     "blue" => r.blue = count,
-                    "green" => r.green = count, 
+                    "green" => r.green = count,
                     _ => panic!("unable to match {color}"),
                 };
             }
@@ -61,8 +93,17 @@ fn parse_games(input: &str) -> Vec<Game> {
         }
         games.push(game)
     }
-    dbg!(&games);
     games
+}
+
+fn get_valid_games(games: &[Game], bag: Bag) -> Vec<u32> {
+    let mut valid_games: Vec<u32> = Vec::new();
+    for game in games {
+        if game.is_valid_game(&bag) {
+            valid_games.push(game.game_number);
+        }
+    }
+    valid_games
 }
 
 #[cfg(test)]
@@ -77,6 +118,6 @@ mod tests {
         Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
         Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
         assert_eq!("8", process(input)?);
-        Ok(())  
+        Ok(())
     }
 }
