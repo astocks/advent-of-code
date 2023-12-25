@@ -1,15 +1,15 @@
 use crate::custom_error::AocError;
 #[derive(Debug)]
 pub struct Round {
-    red: u8,
-    green: u8,
-    blue: u8,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
 }
 
 #[derive(Debug)]
 pub struct Game {
-    game_number: u32,
-    rounds: Vec<Round>,
+    pub game_number: u32,
+    pub rounds: Vec<Round>,
 }
 
 impl Game {
@@ -35,9 +35,9 @@ impl Game {
 
 #[derive(Debug)]
 pub struct Bag {
-    red: u8,
-    green: u8,
-    blue: u8,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
 }
 
 #[tracing::instrument]
